@@ -4,64 +4,64 @@ import { openModalAndAddEscapeEventListener } from './modal.js';
 const successMessageTemplate = document.querySelector('#success').content.querySelector('.success');
 const failMessageTemplate = document.querySelector('#error').content.querySelector('.error');
 
-function hideMessage () {
-  const successMessageElement = document.querySelector('.success');
-  const errorMessageElement = document.querySelector('.error');
-
-  if (successMessageElement) {
-    successMessageElement.remove();
-  }
-  if (errorMessageElement) {
-    openModalAndAddEscapeEventListener();
-    errorMessageElement.remove();
-  }
-  document.removeEventListener('click', messageClickHandler);
-  document.removeEventListener('keydown', messageEscKeydownHandler);
-  window.removeEventListener('click', documentSuccessHandler);
-  window.removeEventListener('click', documentErrorHandler);
-}
-
-function messageClickHandler () {
+const messageClickHandler = () => {
   hideMessage();
-}
+};
 
-function messageEscKeydownHandler (evt) {
+const messageEscKeydownHandler = (evt) => {
   if (isEscapeKey(evt)){
     evt.preventDefault();
     hideMessage();
   }
-}
+};
 
-function documentSuccessHandler (evt) {
+const documentSuccessClickHandler = (evt) => {
   const parentNodeElement = evt.target.parentNode;
   if (parentNodeElement.classList.contains('success__inner') || parentNodeElement.classList.contains('success')) {
     return;
   }
   messageClickHandler();
-}
+};
 
-function documentErrorHandler (evt) {
+const documentErrorClickHandler = (evt) => {
   const parentNodeElement = evt.target.parentNode;
   if (parentNodeElement.classList.contains('error__inner') || parentNodeElement.classList.contains('error')) {
     return;
   }
   messageClickHandler();
+};
+
+function hideMessage () {
+  const successMessage = document.querySelector('.success');
+  const errorMessage = document.querySelector('.error');
+
+  if (successMessage) {
+    successMessage.remove();
+  }
+  if (errorMessage) {
+    openModalAndAddEscapeEventListener();
+    errorMessage.remove();
+  }
+  document.removeEventListener('click', messageClickHandler);
+  document.removeEventListener('keydown', messageEscKeydownHandler);
+  window.removeEventListener('click', documentSuccessClickHandler);
+  window.removeEventListener('click', documentErrorClickHandler);
 }
 
-function renderSuccessMessage () {
+const renderSuccessMessage = () => {
   const successMessage = successMessageTemplate.cloneNode(true);
   document.body.append(successMessage);
   successMessage.querySelector('.success__button').addEventListener('click', messageClickHandler);
   document.addEventListener('keydown', messageEscKeydownHandler);
-  window.addEventListener('click', documentSuccessHandler);
-}
+  window.addEventListener('click', documentSuccessClickHandler);
+};
 
-function renderFailMessage () {
+const renderFailMessage = () => {
   const failMessage = failMessageTemplate.cloneNode(true);
   document.body.append(failMessage);
   failMessage.querySelector('.error__button').addEventListener('click', messageClickHandler);
   document.addEventListener('keydown', messageEscKeydownHandler);
-  window.addEventListener('click', documentErrorHandler);
-}
+  window.addEventListener('click', documentErrorClickHandler);
+};
 
 export { renderSuccessMessage, renderFailMessage };

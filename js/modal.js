@@ -5,58 +5,58 @@ import { sendData } from './api.js';
 import { renderSuccessMessage, renderFailMessage } from './modal-message.js';
 
 const modalForm = document.querySelector('.img-upload__form');
-const uploadFileElement = document.querySelector('#upload-file');
-const userModalElement = document.querySelector('.img-upload__overlay');
-const modalCloseElement = document.querySelector('#upload-cancel');
-const bodyElement = document.body;
+const uploadFile = document.querySelector('#upload-file');
+const userModal = document.querySelector('.img-upload__overlay');
+const modalClose = document.querySelector('#upload-cancel');
+const body = document.body;
 const zoomInButton = document.querySelector('.scale__control--bigger');
 const zoomOutButton = document.querySelector('.scale__control--smaller');
 const modalSubmitButton = document.querySelector('#upload-submit');
 
-function openModalElement () {
-  isActiveBlock(userModalElement, 'remove', 'hidden');
-  isActiveBlock(bodyElement, 'add', 'modal-open');
-}
+const openModal = () => {
+  isActiveBlock(userModal, 'remove', 'hidden');
+  isActiveBlock(body, 'add', 'modal-open');
+};
 
-function closeModalElement () {
-  isActiveBlock(userModalElement, 'add', 'hidden');
-  isActiveBlock(bodyElement, 'remove', 'modal-open');
-}
+const closeModal = () => {
+  isActiveBlock(userModal, 'add', 'hidden');
+  isActiveBlock(body, 'remove', 'modal-open');
+};
 
-function resetAndCloseModalElement () {
+const resetAndCloseModal = () => {
   modalForm.reset();
   resetScaleInput();
   resetEffect();
-  closeModalElement();
-}
+  closeModal();
+};
 
-function closeModalByEscape (evt) {
+const closeModalByEscape = (evt) => {
   evt.preventDefault();
-  resetAndCloseModalElement();
-}
+  resetAndCloseModal();
+};
 
-function openModalAndAddEscapeEventListener () {
-  openModalElement();
+const openModalAndAddEscapeEventListener = () => {
+  openModal();
   document.addEventListener('keydown', imgEventUploadHandler);
-}
+};
 
-function closeModalAndRemoveEscapeEventListener () {
-  closeModalElement();
+const closeModalAndRemoveEscapeEventListener = () => {
+  closeModal();
   document.removeEventListener('keydown', imgEventUploadHandler);
-}
+};
 
-function clearFormHandlerState () {
-  modalCloseElement.removeEventListener('click', imgEventUploadHandler);
+const clearFormHandlerState = () => {
+  modalClose.removeEventListener('click', imgEventUploadHandler);
   document.removeEventListener('keydown', imgEventUploadHandler);
   zoomOutButton.removeEventListener('click', zoomOutButtonClickHandler);
   zoomInButton.removeEventListener ('click', zoomInButtonClickHandler);
   modalForm.removeEventListener('change', formChangeHandler);
-}
+};
 
 function imgEventUploadHandler (evt) {
   switch (evt.type) {
     case 'click':
-      resetAndCloseModalElement();
+      resetAndCloseModal();
       clearFormHandlerState();
       break;
     case 'keydown':
@@ -67,40 +67,40 @@ function imgEventUploadHandler (evt) {
       clearFormHandlerState();
       break;
     default:
-      resetAndCloseModalElement();
+      resetAndCloseModal();
       break;
   }
 }
 
-function imgUploadHandler () {
-  openModalElement();
-  modalCloseElement.addEventListener('click', imgEventUploadHandler);
+const imgUploadHandler = () => {
+  openModal();
+  modalClose.addEventListener('click', imgEventUploadHandler);
   document.addEventListener('keydown', imgEventUploadHandler);
   zoomOutButton.addEventListener ('click', zoomOutButtonClickHandler);
   zoomInButton.addEventListener ('click', zoomInButtonClickHandler);
   modalForm.addEventListener('change', formChangeHandler);
-}
+};
 
-uploadFileElement.addEventListener('change', imgUploadHandler);
+uploadFile.addEventListener('change', imgUploadHandler);
 
-function blocModalSubmitButton () {
+const blocModalSubmitButton = () => {
   modalSubmitButton.disabled = true;
   modalSubmitButton.textContent = 'Публикуется...';
-}
+};
 
-function unblockModalSubmitButton () {
+const unblockModalSubmitButton = () => {
   modalSubmitButton.disabled = false;
   modalSubmitButton.textContent = 'Опубликовать';
-}
+};
 
-function setModalFormSubmit () {
+const setModalFormSubmit = () => {
   modalForm.addEventListener('submit', (evt) => {
     evt.preventDefault();
     blocModalSubmitButton();
     sendData(
       () => {
         renderSuccessMessage();
-        resetAndCloseModalElement();
+        resetAndCloseModal();
         clearFormHandlerState();
         unblockModalSubmitButton();
       },
@@ -112,6 +112,6 @@ function setModalFormSubmit () {
       new FormData(evt.target),
     );
   });
-}
+};
 
 export { setModalFormSubmit, openModalAndAddEscapeEventListener };

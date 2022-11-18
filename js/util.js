@@ -1,9 +1,7 @@
-function isEscapeKey (evt) {
-  return evt.key === 'Escape';
-}
+const isEscapeKey = (evt) => evt.key === 'Escape';
 
-function isActiveBlock (element, method, className) {
+const isActiveBlock = (element, method, className) => {
   element.classList[method](className);
-}
+};
 
 export { isEscapeKey, isActiveBlock };
